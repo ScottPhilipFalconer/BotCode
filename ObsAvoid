@@ -1,118 +1,102 @@
-// These #define statements make the code more readable.
-// Instead of a pin number "7" or "12" we can write "ECHO" or "TRIG"
 #define ECHO 12
 #define TRIG 7
+
 void setup()
 {
-	pinMode(ECHO,INPUT); //Initialise pin 12 as an input
-	pinMode(TRIG,OUTPUT); //Initialise pin 7 as an output
-	Serial.begin(9600); //begin serial communication
-	pinMode(5,OUTPUT); //set ENA as an output
-	pinMode(6,OUTPUT); //set ENB as an output
-	pinMode(8,OUTPUT); //set IN1 as an output
-	pinMode(9,OUTPUT); //set IN2 as an output
-	pinMode(10,OUTPUT); //set IN3 as an output
-	pinMode(11,OUTPUT); //set IN4 as an output
-	delay(5000);//delay before starting loop
+  pinMode(ECHO,INPUT); 
+  pinMode(TRIG,OUTPUT);
+  Serial.begin(9600); 
+  pinMode(5,OUTPUT);
+  pinMode(6,OUTPUT);
+  pinMode(8,OUTPUT); 
+  pinMode(9,OUTPUT); 
+  pinMode(10,OUTPUT);
+  pinMode(11,OUTPUT); 
+  delay(5000);
 }
 
 void loop()
 {
-	//if(sonar_mm > 150 /*&& inState "LineFollow"*/) //write code for LineFollow state
-		int sensorVal = digitalRead(A0);
-		leftForwards();       
-		rightForwards();      
-		analogWrite(5,/*sensorVal * */127);   
-		analogWrite(6,/*sensorVal * */127);
-	
-	//this initial code wil turn the value of the IR sensor into an integer of 1 or 0...
-	//...and multiply this value by the desired speed. If it reads a 0 (no black line)...
-	//...the speed will equal zero. This code will probably be changed.   
+  if(sonar_mm > 150 && sensorVal == 1/*&& inState "LineFollow"*/) //write code for LineFollow state
+    int sensorVal = digitalRead(A0);
+    leftForwards();       
+    rightForwards();      
+    analogWrite(5,/*sensorVal * */127);   
+    analogWrite(6,/*sensorVal * */127);
+  
+  //this initial code will turn the value of the IR sensor into an integer of 1 or 0...
+  //...and multiply this value by the desired speed. If it reads a 0 (no black line)...
+  //...the speed will equal zero. This code will probably be changed. Oommented out.
 
-	if(sonar_mm < 150)
-		leftForwards();
-		rightBackwards();
-		analogWrite(5,64);
-		analogWrite(6,64); 
-		delay(1000); //This should turn the robot to the right for 1 second
-		leftForwards();
-		rightForwards();
-		analogWrite(5,127);
-		analogWrite(6,127);
-		delay(1000); //this should have to robot go forward for 1 seconds
-		leftBackwards();
-		rightForwards();
-		analogWrite(5,64);
-		analogWrite(6,64);
-		delay(1000); //this should turn the robot left for 1 second
+  if(sonar_mm < 150)
+    leftForwards();
+    rightBackwards();
+    analogWrite(5,64);
+    analogWrite(6,64); 
+    delay(1000); //This should turn the robot to the right for 1 second
+    leftForwards();
+    rightForwards();
+    analogWrite(5,127);
+    analogWrite(6,127);
+    delay(1000); //this should have to robot go forward for 1 seconds
+    leftBackwards();
+    rightForwards();
+    analogWrite(5,64);
+    analogWrite(6,64);
+    delay(1000); //this should turn the robot left for 1 second
 
-		//this if statement should allow the robot to turn, go forward, and...
-		//...turn back for the same duration as the initial turn.
+    //this if statement should allow the robot to turn, go forward, and...
+    //...turn back for the same duration as the initial turn.
 
 
-	if(sonar_mm > 150 /*&& inState "ObsAvoid"*/) //write code for ObsAvoid state
-		leftForwards();
-		rightForwards();
-		analogWrite(5,127);
-		analogWrite(6,127);
-		delay(2000);
-		leftBackwards();
-		rightBackwards();
-		analogWrite(5,64);
-		analogWrite(6,64);
-		delay(1000);
-		
-
+  if(sonar_mm > 150 && sensorVal == 0 /*&& inState "ObsAvoid"*/) //write code for ObsAvoid state
+    leftForwards();
+    rightForwards();
+    analogWrite(5,127);
+    analogWrite(6,127);
+    delay(2000);
+    leftBackwards();
+    rightForwards();
+    analogWrite(5,64);
+    analogWrite(6,64);
+    delay(1000);    
+    //This code should have the robot go forwards after it reaches the ned of the obstacle, then turn left...
+    //...and go forwards again, this should eventually either bring it back to the track or to the obstacle...
+    //...where it will begin the if statement for being within 150 mm. It should then follow the wall...
+    //...back to the black line.
 }
 
 void leftForwards(void)
 {
-	//This function sets IN1 = LOW and IN2 = HIGH in order to
-	//... set the direction to forwards for motor 1
-	digitalWrite(8,LOW); //IN1
-	digitalWrite(9,HIGH); //IN2
+  digitalWrite(8,LOW); //IN1
+  digitalWrite(9,HIGH); //IN2
 }
 
 void leftBackwards(void)
 {
-	//This function sets IN1 = HIGH and IN2 = LOW in order
-	//...to set the direction to backwards for motor 1
-	digitalWrite(8,HIGH); //IN1
-	digitalWrite(9,LOW); //IN2
+  digitalWrite(8,HIGH); //IN1
+  digitalWrite(9,LOW); //IN2
 }
 
 void rightForwards(void)
 {
-	//This function sets IN3 = LOW and IN4 = HIGH in order
-	//...to set the direction to forwards for motor 2
-	digitalWrite(10,LOW); //IN3
-	digitalWrite(11,HIGH); //IN4
+  digitalWrite(10,LOW); //IN3
+  digitalWrite(11,HIGH); //IN4
 }
 
 void rightBackwards(void)
 {
-	//This function sets IN3 = HIGH and IN4 = LOW in order
-	//...to set the direction to forwards for motor 2
-	digitalWrite(10,HIGH); //IN3
-	digitalWrite(11,LOW); //IN4
+  digitalWrite(10,HIGH); //IN3
+  digitalWrite(11,LOW); //IN4
 }
 
 unsigned int sonar_mm(void)
 {
-	long duration = 0;
-	const float speed_sound = 340.29;// m/s, "const" makes the compiler able to optimise
-	//... the program where this variable is used, cool!
-	// Read in a distance from the ultrasonic distance sensor:
-	// The ultrasonic burst is triggered by a HIGH pulse of 10 microseconds.
-	digitalWrite(TRIG, HIGH);
-	delayMicroseconds(10);
-	digitalWrite(TRIG, LOW);//read length of time pulse
-	duration = pulseIn(ECHO, HIGH); //This function measures a pulsewidth and returns
-	//...the width in microseconds
-	// convert the time into a distance
-	// the code "(unsigned int)" turns the result of the distance calculation
-	// into an integer instead of a floating point (decimal or fractional) number.
-	return (unsigned int)(0.5 * duration * 1e-6 * speed_sound * 1e3);
-	//"unsigned" ensures we are returning an unsigned number, remember that there is no
-	//...such thing as negative distance.
+  long duration = 0;
+  const float speed_sound = 340.29;
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+  duration = pulseIn(ECHO, HIGH); 
+  return (unsigned int)(0.5 * duration * 1e-6 * speed_sound * 1e3);
 }
