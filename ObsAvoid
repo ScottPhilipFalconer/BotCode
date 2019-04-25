@@ -18,11 +18,12 @@ void setup()
 
 void loop()
 {
-	int sensorVal = digitalRead(A0);
-	leftForwards();       
-	rightForwards();      
-	analogWrite(5,sensorVal*127);   
-	analogWrite(6,sensorVal*127);
+	//if(sonar_mm > 150 /*&& inState "LineFollow"*/) //write code for LineFollow state
+		int sensorVal = digitalRead(A0);
+		leftForwards();       
+		rightForwards();      
+		analogWrite(5,/*sensorVal * */127);   
+		analogWrite(6,/*sensorVal * */127);
 	
 	//this initial code wil turn the value of the IR sensor into an integer of 1 or 0...
 	//...and multiply this value by the desired speed. If it reads a 0 (no black line)...
@@ -44,9 +45,23 @@ void loop()
 		analogWrite(5,64);
 		analogWrite(6,64);
 		delay(1000); //this should turn the robot left for 1 second
-		
+
 		//this if statement should allow the robot to turn, go forward, and...
 		//...turn back for the same duration as the initial turn.
+
+
+	if(sonar_mm > 150 /*&& inState "ObsAvoid"*/) //write code for ObsAvoid state
+		leftForwards();
+		rightForwards();
+		analogWrite(5,127);
+		analogWrite(6,127);
+		delay(2000);
+		leftBackwards();
+		rightBackwards();
+		analogWrite(5,64);
+		analogWrite(6,64);
+		delay(1000);
+		
 
 }
 
