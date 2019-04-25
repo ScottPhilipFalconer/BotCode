@@ -22,7 +22,7 @@ void loop()
     leftForwards();       
     rightForwards();      
     analogWrite(5,/*sensorVal * */127);   
-    analogWrite(6,/*sensorVal * */127);
+    analogWrite(6,/*sensorVal * */117);
   
   //this initial code will turn the value of the IR sensor into an integer of 1 or 0...
   //...and multiply this value by the desired speed. If it reads a 0 (no black line)...
@@ -32,17 +32,17 @@ void loop()
     leftForwards();
     rightBackwards();
     analogWrite(5,64);
-    analogWrite(6,64); 
+    analogWrite(6,54); 
     delay(1000); //This should turn the robot to the right for 1 second
     leftForwards();
     rightForwards();
     analogWrite(5,127);
-    analogWrite(6,127);
+    analogWrite(6,117);
     delay(1000); //this should have to robot go forward for 1 seconds
     leftBackwards();
     rightForwards();
     analogWrite(5,64);
-    analogWrite(6,64);
+    analogWrite(6,54);
     delay(1000); //this should turn the robot left for 1 second
 
     //this if statement should allow the robot to turn, go forward, and...
@@ -53,12 +53,12 @@ void loop()
     leftForwards();
     rightForwards();
     analogWrite(5,127);
-    analogWrite(6,127);
+    analogWrite(6,117);
     delay(2000);
     leftBackwards();
     rightForwards();
     analogWrite(5,64);
-    analogWrite(6,64);
+    analogWrite(6,54);
     delay(1000);    
     //This code should have the robot go forwards after it reaches the ned of the obstacle, then turn left...
     //...and go forwards again, this should eventually either bring it back to the track or to the obstacle...
